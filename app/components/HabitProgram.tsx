@@ -3,6 +3,9 @@ import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../components/ui/tabs';
 import { Activity, Clock, Scale, Heart } from 'lucide-react';
 import { Dumbbell, Users, Timer } from 'lucide-react';
+import { Button } from './ui/button';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const HabitProgram = () => {
   const renderWeek = (week: any) => (
@@ -493,16 +496,45 @@ const programs = {
        }
      ]
    }
+const exportToPDF = async () => {
+    const content = document.getElementById('pdf-content');
+    if (!content) return;
+
+    // Create a canvas from the content
+    const canvas = await html2canvas(content);
+    const imgData = canvas.toDataURL('image/png');
+
+    // Initialize PDF
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'px',
+      format: [canvas.width, canvas.height]
+    });
+
+    // Add the image to PDF
+    pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+
+    // Download the PDF
+    pdf.save(`habit-program-${activeTab}.pdf`);
  };
    
 return (
-    <div className="max-w-3xl mx-auto p-6 font-sans bg-slate-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-slate-900 mb-8 tracking-tight">
-        8-Week Habit Building Program
-      </h1>
+     <div className="max-w-3xl mx-auto p-6 bg-slate-50 min-h-screen">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-slate-900">
+          8-Week Habit Building Program
+        </h1>
+        <Button
+          onClick={exportToPDF}
+          className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white"
+        >
+          <Download className="w-4 h-4" />
+          Save as PDF
+        </Button>
+      </div>
       
-      <Tabs defaultValue="strength" className="w-full">
-        <TabsList className="w-full grid grid-cols-3 bg-slate-900 rounded-xl p-1 mb-8">
+      <Tabs defaultValue="strength" onValueChange={setActiveTab}>
+        <TabsList className="w-full grid grid-cols-3 bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-1.5 mb-8">
           <TabsTrigger 
             value="strength" 
             className="flex items-center gap-2 text-white data-[state=active]:bg-slate-800 rounded-lg py-3 px-4 transition-all"
