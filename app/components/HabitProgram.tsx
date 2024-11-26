@@ -457,14 +457,19 @@ const HabitProgram = () => {
 return (
   <div className="max-w-3xl mx-auto p-6">
     <Tabs defaultValue="strength">
-     <h1 className="text-3xl font-bold text-gray-900 mb-8">
-        {programs.title}8-Week Habit Building Program</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">
+        8-Week Habit Building Program
+      </h1>
       <TabsList className="w-full grid grid-cols-3 bg-white p-1 rounded-lg mb-6">
         <TabsTrigger value="strength" className="rounded-md py-2 px-4 data-[state=active]:bg-white data-[state=active]:shadow-sm">
           Strength
         </TabsTrigger>
-        <TabsTrigger value="hybrid" className="rounded-md py-2 px-4 text-gray-500">Hybrid</TabsTrigger>
-        <TabsTrigger value="cardio" className="rounded-md py-2 px-4 text-gray-500">Classes</TabsTrigger>
+        <TabsTrigger value="hybrid" className="rounded-md py-2 px-4 text-gray-500">
+          Hybrid
+        </TabsTrigger>
+        <TabsTrigger value="cardio" className="rounded-md py-2 px-4 text-gray-500">
+          Classes
+        </TabsTrigger>
       </TabsList>
 
       {Object.entries(programs).map(([key, program]) => (
