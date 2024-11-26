@@ -2,9 +2,50 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../components/ui/tabs';
 import { Activity, Clock, Scale, Heart } from 'lucide-react';
+import { Dumbbell, Users, Timer } from 'lucide-react';
 
 const HabitProgram = () => {
- const programs = {
+  const renderWeek = (week: any) => (
+    <div key={week.week} className="bg-white rounded-lg p-6 shadow-sm space-y-6">
+      <div className="flex items-center space-x-2 border-b border-slate-100 pb-4">
+        <Timer className="w-5 h-5 text-slate-600" />
+        <h3 className="text-lg font-semibold text-slate-800">
+          Week {week.week} - {week.focus}
+        </h3>
+      </div>
+      <div className="space-y-6">
+        {week.habits.map((habit: any, idx: number) => (
+          <div key={idx} className="group">
+            <label className="flex items-start gap-4 cursor-pointer">
+              <div className="relative flex items-start">
+                <div className="bg-white border-2 rounded w-5 h-5 mt-0.5 flex flex-shrink-0 justify-center items-center mr-2 border-slate-300 group-hover:border-slate-800 transition-colors">
+                  <input 
+                    type="checkbox" 
+                    className="opacity-0 absolute cursor-pointer w-5 h-5"
+                  />
+                  <svg 
+                    className="fill-current hidden w-3 h-3 text-slate-800 pointer-events-none" 
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M0 11l2-2 5 5L18 3l2 2L7 18z"/>
+                  </svg>
+                </div>
+              </div>
+              <div>
+                <p className="font-medium text-slate-900 group-hover:text-slate-800 transition-colors">
+                  {habit.habit}
+                </p>
+                <p className="text-sm text-slate-600 mt-1 leading-relaxed">
+                  {habit.example}
+                </p>
+              </div>
+            </label>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+const programs = {
    strength: {
      title: "Strength & Growth Habits",
      weeks: [
@@ -455,53 +496,52 @@ const HabitProgram = () => {
  };
    
 return (
-  <div className="max-w-3xl mx-auto p-6">
-    <Tabs defaultValue="strength">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">
+    <div className="max-w-3xl mx-auto p-6 font-sans bg-slate-50 min-h-screen">
+      <h1 className="text-3xl font-bold text-slate-900 mb-8 tracking-tight">
         8-Week Habit Building Program
       </h1>
-      <TabsList className="w-full grid grid-cols-3 bg-white p-1 rounded-lg mb-6">
-        <TabsTrigger value="strength" className="rounded-md py-2 px-4 data-[state=active]:bg-white data-[state=active]:shadow-sm">
-          Strength
-        </TabsTrigger>
-        <TabsTrigger value="hybrid" className="rounded-md py-2 px-4 text-gray-500">
-          Hybrid
-        </TabsTrigger>
-        <TabsTrigger value="cardio" className="rounded-md py-2 px-4 text-gray-500">
-          Classes
-        </TabsTrigger>
-      </TabsList>
+      
+      <Tabs defaultValue="strength" className="w-full">
+        <TabsList className="w-full grid grid-cols-3 bg-slate-900 rounded-xl p-1 mb-8">
+          <TabsTrigger 
+            value="strength" 
+            className="flex items-center gap-2 text-white data-[state=active]:bg-slate-800 rounded-lg py-3 px-4 transition-all"
+          >
+            <Dumbbell className="w-4 h-4" />
+            <span>Strength</span>
+          </TabsTrigger>
+          <TabsTrigger 
+            value="hybrid" 
+            className="flex items-center gap-2 text-white data-[state=active]:bg-slate-800 rounded-lg py-3 px-4 transition-all"
+          >
+            <Timer className="w-4 h-4" />
+            <span>Hybrid</span>
+          </TabsTrigger>
+          <TabsTrigger 
+            value="cardio" 
+            className="flex items-center gap-2 text-white data-[state=active]:bg-slate-800 rounded-lg py-3 px-4 transition-all"
+          >
+            <Users className="w-4 h-4" />
+            <span>Classes</span>
+          </TabsTrigger>
+        </TabsList>
 
-      {Object.entries(programs).map(([key, program]) => (
-        <TabsContent key={key} value={key}>
-          <h2 className="text-lg mb-6" style={{ fontFamily: 'Robotoblack' }}>{program.title}</h2>
-          <div className="space-y-8">
-            {program.weeks.map((week) => (
-              <div key={week.week} className="bg-white rounded-lg shadow-sm">
-                <h3 className="flex items-center gap-2" style={{ fontFamily: 'Roboto' }} mb-4>
-                  <span className="h-4 w-4" /> Week {week.week} - {week.focus}
-                </h3>
-                <div className="space-y-4">
-                  {week.habits.map((habit, idx) => (
-                    <div key={idx}>
-                      <label className="flex items-start gap-3 cursor-pointer">
-                        <input type="checkbox" className="mt-1 h-4 w-4 rounded border-gray-300" />
-                        <div>
-                          <div className="style={{ fontFamily: 'Roboto' }}">{habit.habit}</div>
-                          <div className="text-sm text-gray-600 mt-1">{habit.example}</div>
-                        </div>
-                      </label>
-                    </div>
-                  ))}
-                </div>
+        {Object.entries(programs).map(([key, program]) => (
+          <TabsContent key={key} value={key}>
+            <div>
+              <h2 className="text-2xl font-semibold mb-6 text-slate-900">
+                {program.title}
+              </h2>
+              
+              <div className="space-y-6">
+                {program.weeks.map((week) => renderWeek(week))}
               </div>
-            ))}
-          </div>
-        </TabsContent>
-      ))}
-    </Tabs>
-  </div>
-);
+            </div>
+          </TabsContent>
+        ))}
+      </Tabs>
+    </div>
+  );
 };
 
 export default HabitProgram;
