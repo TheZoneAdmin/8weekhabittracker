@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@shadcn/ui": "^0.0.3"
     "@radix-ui/react-tabs": "^1.0.4",
     "next": "14.0.3",
     "react": "^18",
