@@ -521,60 +521,91 @@ const exportToPDF = async () => {
     pdf.save(`habit-program-${activeTab}.pdf`);
  };
    
- return (
-    <div className="bg-gray-900 p-12 max-w-4xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">
-          <span className="text-[#CCBA78]">Transform</span>
-          <span className="text-white"> Your Habits</span>
-        </h1>
-        <h2 className="text-white text-xl">8-Week Journey to Better Health</h2>
+  return (
+    <div className="bg-gray-900 p-12 max-w-4xl mx-auto min-h-screen">
+      <div className="mb-8 flex justify-between items-center">
+        <div>
+          <h1 className="text-4xl font-bold mb-2">
+            <span className="text-[#CCBA78]">Transform</span>
+            <span className="text-white"> Your Habits</span>
+          </h1>
+          <h2 className="text-white text-xl">8-Week Journey to Better Health</h2>
+        </div>
+        <Button
+          onClick={exportToPDF}
+          disabled={exporting}
+          className="bg-[#CCBA78] text-gray-900 hover:bg-opacity-90"
+        >
+          {exporting ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Download className="w-4 h-4" />
+          )}
+          {exporting ? 'Exporting...' : 'Save PDF'}
+        </Button>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-8">
-        <button className="bg-[#CCBA78] text-gray-900 px-6 py-3 rounded font-medium hover:bg-opacity-90 transition-colors flex items-center justify-center gap-2">
-          <Trophy className="w-5 h-5" />
-          Strength
-        </button>
-        <button className="border-2 border-[#CCBA78] text-[#CCBA78] px-6 py-3 rounded font-medium hover:bg-[#CCBA78] hover:text-gray-900 transition-colors flex items-center justify-center gap-2">
-          <Calendar className="w-5 h-5" />
-          Hybrid
-        </button>
-        <button className="border-2 border-[#CCBA78] text-[#CCBA78] px-6 py-3 rounded font-medium hover:bg-[#CCBA78] hover:text-gray-900 transition-colors flex items-center justify-center gap-2">
-          <Share2 className="w-5 h-5" />
-          Classes
-        </button>
-      </div>
+      <Tabs defaultValue="strength" onValueChange={setActiveTab}>
+        <TabsList className="grid grid-cols-3 gap-4 mb-8">
+          <TabsTrigger 
+            value="strength" 
+            className="bg-[#CCBA78] text-gray-900 data-[state=active]:bg-opacity-90 px-6 py-3 rounded font-medium"
+          >
+            <Trophy className="w-5 h-5 mr-2" />
+            Strength
+          </TabsTrigger>
+          <TabsTrigger 
+            value="hybrid" 
+            className="border-2 border-[#CCBA78] text-[#CCBA78] data-[state=active]:bg-[#CCBA78] data-[state=active]:text-gray-900 px-6 py-3 rounded font-medium"
+          >
+            <Timer className="w-5 h-5 mr-2" />
+            Hybrid
+          </TabsTrigger>
+          <TabsTrigger 
+            value="cardio" 
+            className="border-2 border-[#CCBA78] text-[#CCBA78] data-[state=active]:bg-[#CCBA78] data-[state=active]:text-gray-900 px-6 py-3 rounded font-medium"
+          >
+            <Users className="w-5 h-5 mr-2" />
+            Classes
+          </TabsTrigger>
+        </TabsList>
 
-      <div className="space-y-6">
-        {weeks.map((week) => (
-          <Card key={week.week} className="bg-gray-800 border-none">
-            <CardContent className="p-6">
-              <h3 className="text-[#CCBA78] text-lg font-semibold mb-4">
-                Week {week.week} - {week.focus}
-              </h3>
-              <div className="space-y-4">
-                {week.habits.map((habit, idx) => (
-                  <div key={idx} className="space-y-2">
-                    <div className="flex items-center justify-between text-white">
-                      <p className="font-medium">{habit.habit}</p>
-                      <Badge className="bg-[#CCBA78] text-gray-900">
-                        0/7 days
-                      </Badge>
-                    </div>
-                    <Progress value={0} className="h-2 bg-gray-700">
-                      <div className="h-full bg-[#CCBA78] transition-all" />
-                    </Progress>
-                    <p className="text-gray-400 text-sm">{habit.example}</p>
-                  </div>
+        <div id="pdf-content">
+          {Object.entries(programs).map(([key, program]) => (
+            <TabsContent key={key} value={key}>
+              <div className="space-y-6">
+                {program.weeks.map((week) => (
+                  <Card key={week.week} className="bg-gray-800 border-none">
+                    <CardContent className="p-6">
+                      <h3 className="text-[#CCBA78] text-lg font-semibold mb-4">
+                        Week {week.week} - {week.focus}
+                      </h3>
+                      <div className="space-y-4">
+                        {week.habits.map((habit, idx) => (
+                          <div key={idx} className="group">
+                            <div className="flex items-center space-x-4 text-white">
+                              <input 
+                                type="checkbox" 
+                                className="w-5 h-5 rounded border-[#CCBA78]"
+                              />
+                              <div>
+                                <p className="font-medium">{habit.habit}</p>
+                                <p className="text-gray-400 text-sm mt-1">{habit.example}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+            </TabsContent>
+          ))}
+        </div>
+      </Tabs>
     </div>
   );
 };
 
-export default HabitTracker;
+export default HabitProgram;
