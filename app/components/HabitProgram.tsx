@@ -6,6 +6,9 @@ import { Dumbbell, Users, Timer } from 'lucide-react';
 import { Button } from './ui/button';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import { Trophy, Share2, Calendar } from 'lucide-react';
 
 const HabitProgram = () => {
   const renderWeek = (week: any) => (
@@ -518,62 +521,60 @@ const exportToPDF = async () => {
     pdf.save(`habit-program-${activeTab}.pdf`);
  };
    
-return (
-     <div className="max-w-3xl mx-auto p-6 bg-slate-50 min-h-screen">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">
-          8-Week Habit Building Program
+ return (
+    <div className="bg-gray-900 p-12 max-w-4xl mx-auto">
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold mb-2">
+          <span className="text-[#CCBA78]">Transform</span>
+          <span className="text-white"> Your Habits</span>
         </h1>
-        <Button
-          onClick={exportToPDF}
-          className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white"
-        >
-          <Download className="w-4 h-4" />
-          Save as PDF
-        </Button>
+        <h2 className="text-white text-xl">8-Week Journey to Better Health</h2>
       </div>
-      
-      <Tabs defaultValue="strength" onValueChange={setActiveTab}>
-        <TabsList className="w-full grid grid-cols-3 bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl p-1.5 mb-8">
-          <TabsTrigger 
-            value="strength" 
-            className="flex items-center gap-2 text-white data-[state=active]:bg-slate-800 rounded-lg py-3 px-4 transition-all"
-          >
-            <Dumbbell className="w-4 h-4" />
-            <span>Strength</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="hybrid" 
-            className="flex items-center gap-2 text-white data-[state=active]:bg-slate-800 rounded-lg py-3 px-4 transition-all"
-          >
-            <Timer className="w-4 h-4" />
-            <span>Hybrid</span>
-          </TabsTrigger>
-          <TabsTrigger 
-            value="cardio" 
-            className="flex items-center gap-2 text-white data-[state=active]:bg-slate-800 rounded-lg py-3 px-4 transition-all"
-          >
-            <Users className="w-4 h-4" />
-            <span>Classes</span>
-          </TabsTrigger>
-        </TabsList>
 
-        {Object.entries(programs).map(([key, program]) => (
-          <TabsContent key={key} value={key}>
-            <div>
-              <h2 className="text-2xl font-semibold mb-6 text-slate-900">
-                {program.title}
-              </h2>
-              
-              <div className="space-y-6">
-                {program.weeks.map((week) => renderWeek(week))}
+      <div className="grid grid-cols-3 gap-4 mb-8">
+        <button className="bg-[#CCBA78] text-gray-900 px-6 py-3 rounded font-medium hover:bg-opacity-90 transition-colors flex items-center justify-center gap-2">
+          <Trophy className="w-5 h-5" />
+          Strength
+        </button>
+        <button className="border-2 border-[#CCBA78] text-[#CCBA78] px-6 py-3 rounded font-medium hover:bg-[#CCBA78] hover:text-gray-900 transition-colors flex items-center justify-center gap-2">
+          <Calendar className="w-5 h-5" />
+          Hybrid
+        </button>
+        <button className="border-2 border-[#CCBA78] text-[#CCBA78] px-6 py-3 rounded font-medium hover:bg-[#CCBA78] hover:text-gray-900 transition-colors flex items-center justify-center gap-2">
+          <Share2 className="w-5 h-5" />
+          Classes
+        </button>
+      </div>
+
+      <div className="space-y-6">
+        {weeks.map((week) => (
+          <Card key={week.week} className="bg-gray-800 border-none">
+            <CardContent className="p-6">
+              <h3 className="text-[#CCBA78] text-lg font-semibold mb-4">
+                Week {week.week} - {week.focus}
+              </h3>
+              <div className="space-y-4">
+                {week.habits.map((habit, idx) => (
+                  <div key={idx} className="space-y-2">
+                    <div className="flex items-center justify-between text-white">
+                      <p className="font-medium">{habit.habit}</p>
+                      <Badge className="bg-[#CCBA78] text-gray-900">
+                        0/7 days
+                      </Badge>
+                    </div>
+                    <Progress value={0} className="h-2 bg-gray-700">
+                      <div className="h-full bg-[#CCBA78] transition-all" />
+                    </Progress>
+                    <p className="text-gray-400 text-sm">{habit.example}</p>
+                  </div>
+                ))}
               </div>
-            </div>
-          </TabsContent>
+            </CardContent>
+          </Card>
         ))}
-      </Tabs>
+      </div>
     </div>
   );
 };
 
-export default HabitProgram;
+export default HabitTracker;
